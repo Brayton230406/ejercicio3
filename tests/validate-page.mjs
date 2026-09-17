@@ -27,15 +27,23 @@ try {
       throw new Error(`No se pudo cargar la página en ${viewport.name}.`);
     }
 
-    const checks = await page.evaluate(() => ({
-      stylesheetLoaded: [...document.styleSheets].some((sheet) => sheet.href?.endsWith('/style.css')),
-      hasHorizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
-      hasLang: Boolean(document.documentElement.lang),
-      hasTitle: Boolean(document.title),
-      hasMain: Boolean(document.querySelector('main')),
-      externalLinksAreSecure: [...document.querySelectorAll('a[href^="http"]')]
-        .every((link) => link.href.startsWith('https://'))
-    }));
+    const checks = await page.evaluate(() => {
+      const viewportWidth = document.documentElement.clientWidth;
+      const overflowingElements = [...document.querySelectorAll('body *')].filter((element) => {
+        const rect = element.getBoundingClientRect();
+        return rect.left < -1 || rect.right > viewportWidth + 1;
+      });
+
+      return {
+        stylesheetLoaded: [...document.styleSheets].some((sheet) => sheet.href?.endsWith('/style.css')),
+        hasHorizontalOverflow: overflowingElements.length === 0,
+        hasLang: Boolean(document.documentElement.lang),
+        hasTitle: Boolean(document.title),
+        hasMain: Boolean(document.querySelector('main')),
+        externalLinksAreSecure: [...document.querySelectorAll('a[href^="http"]')]
+          .every((link) => link.href.startsWith('https://'))
+      };
+    });
 
     for (const [name, passed] of Object.entries(checks)) {
       if (!passed) {
