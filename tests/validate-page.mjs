@@ -13,8 +13,9 @@ if (!/^<!doctype html>/i.test(html.trim())) {
 }
 
 const browser = await chromium.launch({ headless: true });
+const context = await browser.newContext({ viewport: { width: 375, height: 812 } });
 try {
-  const page = await browser.newPage({ viewport: { width: 375, height: 812 } });
+  const page = await context.newPage();
   const viewports = [
     { name: 'mobile', width: 375, height: 812 },
     { name: 'desktop', width: 1440, height: 900 }
@@ -61,6 +62,7 @@ try {
     }
   }
 } finally {
+  await context.close();
   await browser.close();
 }
 
