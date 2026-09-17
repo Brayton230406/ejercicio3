@@ -1,0 +1,16 @@
+{
+  "name": "ejercicio3",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Galeria accesible y responsiva de servicios",
+  "scripts": {
+    "test:html": "html-validate index.html",
+    "test:quality": "node tests/validate-page.mjs",
+    "test": "npm run test:html && npm run test:quality"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
+    "html-validate": "^9.0.0",
+    "playwright": "^1.55.0"
+  }
+}
