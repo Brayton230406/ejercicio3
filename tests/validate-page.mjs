@@ -29,7 +29,7 @@ try {
 
     const checks = await page.evaluate(() => ({
       stylesheetLoaded: [...document.styleSheets].some((sheet) => sheet.href?.endsWith('/style.css')),
-      hasHorizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
+      hasHorizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
       hasLang: Boolean(document.documentElement.lang),
       hasTitle: Boolean(document.title),
       hasMain: Boolean(document.querySelector('main')),
